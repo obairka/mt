@@ -1,0 +1,22 @@
+/*
+ * test program
+ * used in 
+ * LexerProgramTest
+ *
+ */
+ 
+ void main() {
+	int a;
+	double b;
+	a = (3 + 4) * 6 / 2; 	// integer expression 21
+	b = 2.5 * 2.0 ^ 2.0; 	// double expression  25
+	b = a;					// int conversion to double
+	if (a < b) {			// checking if condition
+		print(a);			// print integer 21
+	}
+	else {
+		double c;
+		c =  a ^ 0.5;		// sqrt(a) int convert to double, calc sqrt(21)
+		print(c);		
+	}	
+ }
