@@ -170,7 +170,7 @@ public class SimpleLexer implements Lexer  {
 					currentString .append((char)ch);					
 					buffer.nextChar();
 				} else {
-                    if (KEY_WORDS.containsKey(currentString.toString())) {
+                    if (KEY_WORDS.containsKey(currentString.toString()) )  {
                         return KEY_WORDS.get(currentString.toString());
                     }
 					return new Token(TokenType.ID, currentString.toString());

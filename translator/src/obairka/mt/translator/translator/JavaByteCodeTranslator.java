@@ -42,34 +42,27 @@ public class JavaByteCodeTranslator  implements Translator {
     private void appendFunction(StringBuilder programBuilder,  Function function) {
         StringBuilder functionHeaderBuilder = new StringBuilder();
         StackSizeCounter stackSizeCounter = new StackSizeCounter();
-        functionHeaderBuilder.append(METHOD);
-        functionHeaderBuilder.append("\t\t\t\t");
-        if (function.getFunctionName().equals("main")){
+        functionHeaderBuilder.append(METHOD).append("\t\t\t\t");
+        if (   "main".equals(function.getFunctionName()) ) {
             functionHeaderBuilder.append(MAIN_FUNCTION_TOP + "\n");
         } else {
             char returnType = Evaluator.getTypeSymbol(function.getReturnType());
-            functionHeaderBuilder.append(FUNCTION_PREFIX);
-            functionHeaderBuilder.append(" ");
-            functionHeaderBuilder.append(function.getFunctionName());
-            functionHeaderBuilder.append("(");
+            functionHeaderBuilder.append(FUNCTION_PREFIX).append(" ").append(function.getFunctionName()).append("(");
             for (int i = 0; i < function.getArgumentsCount(); ++i) {
                 Type type = function.getArgumentType(i);
                 stackSizeCounter.increment(type);
                 char argType = Evaluator.getTypeSymbol(type);
                 functionHeaderBuilder.append(argType);
             }
-            functionHeaderBuilder.append(")");
-            functionHeaderBuilder.append(returnType);
-            functionHeaderBuilder.append("\n");
+            functionHeaderBuilder.append(")").append(returnType).append("\n");
         }
         StringBuilder bodyBuilder = new StringBuilder(); // :D
         evaluator.setCurrentStackSizeCounter(stackSizeCounter);
         evaluator.evaluateBody(bodyBuilder, function.getContext(), function.getBody());
 
-        functionHeaderBuilder.append(LIMIT_STACK);                  functionHeaderBuilder.append("\t\t");
-        functionHeaderBuilder.append(stackSizeCounter.getMaxSize());functionHeaderBuilder.append("\n");
-        functionHeaderBuilder.append(LIMIT_LOCALS);                 functionHeaderBuilder.append("\t\t");
-        functionHeaderBuilder.append(function.getLocalSize() + 1);      functionHeaderBuilder.append("\n");
+        functionHeaderBuilder.append(LIMIT_STACK).append("\t\t").append(stackSizeCounter.getMaxSize()).append("\n");
+        functionHeaderBuilder.append(LIMIT_LOCALS).append("\t\t");
+        functionHeaderBuilder.append(function.getLocalSize() + (function.isMain() ? 1 : 0)).append("\n");
 
 
         functionHeaderBuilder.append(bodyBuilder.toString());
@@ -78,9 +71,7 @@ public class JavaByteCodeTranslator  implements Translator {
             functionHeaderBuilder.append("return\n");
         }
 
-        functionHeaderBuilder.append(END_METHOD);
-        functionHeaderBuilder.append("\n");
-        functionHeaderBuilder.append("\n");
+        functionHeaderBuilder.append(END_METHOD).append("\n\n");
 
         programBuilder.append(functionHeaderBuilder.toString());
     }
@@ -89,9 +80,7 @@ public class JavaByteCodeTranslator  implements Translator {
     @Override
     public void generate(Program program) throws IOException {
         StringBuilder programBuilder = new StringBuilder();
-        programBuilder.append(METACLASSINFO);
-        programBuilder.append(INIT_FUNCTION);
-        programBuilder.append("\n");
+        programBuilder.append(METACLASSINFO).append(INIT_FUNCTION).append("\n");
 
         for (Function f : program.getFunctions()){
             appendFunction(programBuilder, f);

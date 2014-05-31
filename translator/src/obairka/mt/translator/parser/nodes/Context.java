@@ -8,7 +8,7 @@ import java.util.HashMap;
  * Time: 9:48
  */
 public class Context {
-    private int idCounter = -1;
+    private int idCounter = 0;
     private final HashMap<String, Variable> variableMap;
 
     public Context(Context other) {
@@ -21,11 +21,28 @@ public class Context {
         variableMap = new HashMap<String, Variable>();
     }
 
-    public void addVariable(Variable var) {
+    public void incrementIdCounter() {
         ++idCounter;
-        // TODO : what is with context number??
+    }
+
+    public void addVariable(Variable var) {
+        int value;
+        switch (var.getType()) {
+            case DOUBLE:
+                value = 2;
+                break;
+            case INT: /*case BOOL:*/
+                value = 1;
+                break;
+            case VOID: default:
+                value = 0; //error
+        }
+
+
+       // TODO : what is with context number??
         variableMap.put(var.getName(), var);
         var.setId(idCounter);
+        idCounter+= value;
     }
 
     public Variable get(String name) {

@@ -42,7 +42,7 @@ public class RecursiveParser implements Parser{
         }
         // check if null but it is not end
         if (!lexer.peekToken().hasType(TokenType.EOF)) {
-             throw new ParseException(ParseException.EOF_EXPECTED, "parseProgram", lexer.currLine(), lexer.currPos());
+             throw new ParseException(ParseException.EOF_EXPECTED, "parseProgram:", lexer.currLine(), lexer.currPos());
         }
         currentProgram = null;
         return program;
@@ -69,6 +69,7 @@ public class RecursiveParser implements Parser{
                     throw new ParseException(ParseException.WRONG_RETURN_TYPE, "Main function", lexer.currLine(), lexer.currPos());
                 }
                 function.setFunctionName("main");
+                function.getContext().incrementIdCounter();
                 currentProgram.setMainFunction(function);
             }
 
@@ -106,7 +107,8 @@ public class RecursiveParser implements Parser{
             return function;
         }
 
-        throw new ParseException(ParseException.FUNCTION_EXPECTED, "parseFunction", lexer.currLine(), lexer.currPos()) ;
+        lexer.nextToken();
+        throw new ParseException(ParseException.FUNCTION_EXPECTED, "parseFunction:"+lexer.peekToken(), lexer.currLine(), lexer.currPos()) ;
 
     }
 
